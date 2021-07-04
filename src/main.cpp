@@ -45,6 +45,9 @@ int main(int argc, char *argv[])
 
 	//call a function asynchronously
 	auto result = std::async(delayedaccumulator,100);
+	std::promise<int> pro;
+	auto f = pro.get_future();
+	std::thread t(&delayedaccumulator,std::move(p,10));
 
 	std::cout << " Do something else" << std::endl;
 	std::cout << "Got the result " << result.get() << std::endl;
