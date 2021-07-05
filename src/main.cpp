@@ -2,10 +2,15 @@
 #include <thread>
 #include <chrono>
 #include <future>
+#include <memory>
+#include <functional>
 
 
 //Use futures, async, promise etc
-
+// async : async destructor blocks 
+// packaged_task : communicates the return at the end of the function
+// promise : the return .setvalue can be set in the middle of the callee function
+// conditional_variable : synchronize the threads between each other by waiting, notifying 
 int delayedaccumulator(int n)
 {
 	std::cout << "Begin of delayed accumulator" << std::endl;
@@ -20,10 +25,10 @@ int delayedaccumulator(int n)
 	return sum;
 }
 
+
 void basicthreadcall()
 {
 	auto sqr = [](int x) { 
-		std::cout << "Square root of " << x << " is " << x*x << std::endl;
 		return x*x; 
 	};
 
@@ -38,19 +43,70 @@ void basicthreadcall()
 	}
 }
 
+int funcwithexception()
+{
+	std::cout << "Throwing exception " <<std::endl;
+	throw std::runtime_error("Exception");
+	return 0;
+}
+
+
+//Use async only when you don't care about the return type, because the return of async , i.e ~future blocks
+void asynctest()
+{
+
+
+	//std::async(delayedaccumulator,50); // accumulates slowly
+	auto f1 = std::async(delayedaccumulator,50); // accumulates slowly
+	//std::async(funcwithexception); // returns exeption
+	auto f2 = std::async(funcwithexception); // returns exeption
+
+
+//	std::cout << "Got the result " << f1.get() << std::endl;
+		
+	
+	// try{
+	
+	// 	std::cout << f2.get();	
+	// }
+	// catch(std::runtime_error ex){
+	// 	std::cout << ex.what() << std::endl;
+	// }
+
+
+}
+
+void packagedtest()
+{
+	auto multiply = [](int a, int b){
+		return a*b;
+	};
+	using Predicate = int(int,int);
+	std::packaged_task<Predicate> task(multiply);
+	std::future<int> result = task.get_future();
+	task(2,9);
+	std::cout << "Task lambda" << result.get();
+
+	std::packaged_task<Predicate> task1(multiply);
+	auto result1 = task1.get_future();
+	std::thread t(std::move(task1),5,10);
+	t.join();
+
+	std::cout << "packaged task with thread " << result1.get() << std::endl; 
+
+}
+
+
+
 
 
 int main(int argc, char *argv[])
 {
 
-	//call a function asynchronously
-	auto result = std::async(delayedaccumulator,100);
-	std::promise<int> pro;
-	auto f = pro.get_future();
-	std::thread t(&delayedaccumulator,std::move(p,10));
+	packagedtest();
+	basicthreadcall();
+	asynctest();
 
-	std::cout << " Do something else" << std::endl;
-	std::cout << "Got the result " << result.get() << std::endl;
-		
 
+	
 }
