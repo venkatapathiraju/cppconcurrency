@@ -5,6 +5,8 @@
 #include <memory>
 #include <functional>
 
+#include "conditionvariable.h"
+
 
 //Use futures, async, promise etc
 // async : async destructor blocks 
@@ -102,6 +104,7 @@ void packagedtest()
 int main(int argc, char *argv[])
 {
 
+	condition_variable::cvtest();
 	packagedtest();
 	basicthreadcall();
 	asynctest();
