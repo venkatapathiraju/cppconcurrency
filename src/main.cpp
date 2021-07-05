@@ -62,16 +62,15 @@ void asynctest()
 	auto f2 = std::async(funcwithexception); // returns exeption
 
 
-//	std::cout << "Got the result " << f1.get() << std::endl;
+	std::cout << "Got the result " << f1.get() << std::endl;
 		
 	
-	// try{
-	
-	// 	std::cout << f2.get();	
-	// }
-	// catch(std::runtime_error ex){
-	// 	std::cout << ex.what() << std::endl;
-	// }
+	 try{
+	 	std::cout << f2.get();	
+	 }
+	 catch(std::runtime_error ex){
+	 	std::cout << ex.what() << std::endl;
+	 }
 
 
 }

@@ -1,2 +1,4 @@
 output
 src/*.o
+/.vs
+/out/
