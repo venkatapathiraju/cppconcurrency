@@ -103,12 +103,8 @@ void packagedtest()
 
 int main(int argc, char *argv[])
 {
-
 	condition_variable::cvtest();
 	packagedtest();
 	basicthreadcall();
 	asynctest();
-
-
-	
 }
